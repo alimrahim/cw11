@@ -12,6 +12,7 @@ type State = {
   comments: Comment[];
   fetchComments: (newsId: number) => Promise<void>;
   createComment: (payload: { newsId: number; author?: string; text: string }) => Promise<void>;
+  deleteComment: (id: number) => Promise<void>;
 };
 
 export const useCommentStore = create<State>((set) => ({
@@ -24,5 +25,12 @@ export const useCommentStore = create<State>((set) => ({
 
   createComment: async (payload) => {
     await api.post("/comments", payload);
+  },
+
+  deleteComment: async (id: number) => {
+    await api.delete(`/comments/${id}`);
+    set((state) => ({
+      comments: state.comments.filter((c) => c.id !== id),
+    }));
   },
 }));

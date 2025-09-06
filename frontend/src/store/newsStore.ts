@@ -7,6 +7,7 @@ export type News = {
     image?: string;
     publishedAt: string;
     content?: string;
+    comments?: string[];
 };
 
 type State = {
@@ -16,6 +17,7 @@ type State = {
     fetchNews: () => Promise<void>;
     fetchNewsById: (id: number) => Promise<void>;
     createNews: (form: FormData) => Promise<void>;
+    deleteNews: (id: number) => Promise<void>;
 };
 
 export const useNewsStore = create<State>((set) => ({
@@ -39,5 +41,13 @@ export const useNewsStore = create<State>((set) => ({
         await api.post("/news", form, {
             headers: { "Content-Type": "multipart/form-data" },
         });
+    },
+
+    deleteNews: async (id: number) => {
+        await api.delete(`/news/${id}`);
+        set((state) => ({
+            news: state.news.filter((n) => n.id !== id),
+            currentNews: state.currentNews?.id === id ? undefined : state.currentNews
+        }));
     },
 }));
