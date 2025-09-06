@@ -49,4 +49,5 @@ export default function NewsPage() {
       <CommentForm newsId={id} />
     </Box>
   );
+  
 }
